@@ -1,0 +1,75 @@
+{% extends 'estoque/base.html' %}
+
+{% block title %}Materiais{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Materiais</h1>
+    <a href="{% url 'cadastrar_material' %}" class="btn" style="background-color: var(--cor-primaria); color: white;">
+        + Novo Material
+    </a>
+</div>
+
+<div class="card card-indicador mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-6">
+                <label class="form-label">Buscar por nome</label>
+                <input type="text" name="busca" value="{{ busca }}" class="form-control" placeholder="Digite o nome do material">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Categoria</label>
+                <select name="categoria" class="form-select">
+                    <option value="">Todas</option>
+                    {% for valor, texto in categorias %}
+                        <option value="{{ valor }}" {% if categoria == valor %}selected{% endif %}>{{ texto }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn w-100" style="background-color: var(--cor-primaria); color: white;">Filtrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-indicador">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Unidade</th>
+                        <th>Atual</th>
+                        <th>Mínimo</th>
+                        <th>Validade</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in materiais %}
+                    <tr>
+                        <td>{{ material.nome }}</td>
+                        <td>{{ material.get_categoria_display }}</td>
+                        <td>{{ material.get_unidade_medida_display }}</td>
+                        <td>{{ material.quantidade_atual }}</td>
+                        <td>{{ material.quantidade_minima }}</td>
+                        <td>{{ material.data_validade|default:"—" }}</td>
+                        <td>
+                            <a href="{% url 'editar_material' material.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'excluir_material' material.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7" class="text-muted">Nenhum material encontrado.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'estoque/base.html' %}
+
+{% block title %}Cadastrar Material{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Cadastrar Material</h1>
+
+<div class="card card-indicador">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.nome.label }}</label>
+                {{ form.nome }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.categoria.label }}</label>
+                {{ form.categoria }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.unidade_medida.label }}</label>
+                {{ form.unidade_medida }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">{{ form.quantidade_atual.label }}</label>
+                    {{ form.quantidade_atual }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">{{ form.quantidade_minima.label }}</label>
+                    {{ form.quantidade_minima }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.data_validade.label }}</label>
+                {{ form.data_validade }}
+            </div>
+
+            <button type="submit" class="btn" style="background-color: var(--cor-primaria); color: white;">Salvar</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Voltar</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

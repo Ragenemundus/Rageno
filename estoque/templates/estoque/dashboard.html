@@ -1,0 +1,162 @@
+{% extends 'estoque/base.html' %}
+
+{% block title %}Dashboard - Almoxarifado{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1><br>
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+
+    <div class="d-flex gap-2">
+        <a href="{% url 'gerar_relatorio_pdf' %}"
+           class="btn btn-outline-danger">
+            Relatório PDF
+        </a>
+
+        <a href="{% url 'cadastrar_material' %}"
+           class="btn"
+           style="background-color: var(--cor-primaria); color: white;">
+            + Novo Material
+        </a>
+    </div>
+</div>
+
+
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="card card-indicador bg-teal">
+            <div class="card-body">
+                <div class="indicador-numero">{{ total_materiais }}</div>
+                <div>Total de materiais</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card card-indicador bg-alerta-suave">
+            <div class="card-body">
+                <div class="indicador-numero">{{ qtd_faltantes }}</div>
+                <div>Estoque baixo</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card card-indicador bg-alerta-suave">
+            <div class="card-body">
+                <div class="indicador-numero">{{ qtd_proximos_vencimento }}</div>
+                <div>Próximos do vencimento</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="card card-indicador bg-erro-suave">
+            <div class="card-body">
+                <div class="indicador-numero">{{ qtd_vencidos }}</div>
+                <div>Vencidos</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-indicador mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Materiais com estoque baixo</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Atual</th>
+                        <th>Mínimo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in faltantes %}
+                    <tr>
+                        <td>{{ material.nome }}</td>
+                        <td>{{ material.get_categoria_display }}</td>
+                        <td>{{ material.quantidade_atual }}</td>
+                        <td>{{ material.quantidade_minima }}</td>
+                        <td>
+                            <a href="{% url 'editar_material' material.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'excluir_material' material.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="text-muted">Nenhum material com estoque baixo.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card card-indicador mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Materiais próximos do vencimento</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Vence em</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in proximos_vencimento %}
+                    <tr>
+                        <td>{{ material.nome }}</td>
+                        <td>{{ material.get_categoria_display }}</td>
+                        <td>{{ material.data_validade }}</td>
+                        <td>
+                            <a href="{% url 'editar_material' material.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'excluir_material' material.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-muted">Nenhum material próximo do vencimento.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card card-indicador mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Materiais vencidos</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Venceu em</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material in vencidos %}
+                    <tr>
+                        <td>{{ material.nome }}</td>
+                        <td>{{ material.get_categoria_display }}</td>
+                        <td>{{ material.data_validade }}</td>
+                        <td>
+                            <a href="{% url 'editar_material' material.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'excluir_material' material.pk %}" class="btn btn-sm btn-outline-danger">Excluir</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-muted">Nenhum material vencido.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
